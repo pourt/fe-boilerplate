@@ -28,6 +28,12 @@ export default defineNuxtConfig({
     },
   },
   imports: {
-    dirs: ['./stores', './middleware', './plugins'],
+    dirs: [
+      './stores',
+      './middleware',
+      './plugins',
+      './composables',
+      './components',
+    ],
   },
 });
