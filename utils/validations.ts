@@ -1,3 +1,4 @@
+import { ucwords } from './text';
 import * as Yup from 'yup';
 
 import type { ValidationSchemaObject } from '~/models/validation';
@@ -10,7 +11,7 @@ const processFormatConstraint = (
   format: any,
   errorField: any
 ) => {
-  const labelText = errorField;
+  const labelText = ucwords(errorField);
 
   return errorField
     ? fieldValidation[format](`${labelText} must be a valid ${format}`)
@@ -65,18 +66,18 @@ const processRequiredConstraint = (
 ) => {
   let labelText: string | null = null;
   if (errorTextFieldLabel) {
-    labelText = errorTextFieldLabel;
+    labelText = ucwords(errorTextFieldLabel);
     return fieldValidation.required(`${labelText} is required`);
   }
 
   const fieldHasUnderScores = field.includes('_');
 
   if (fieldHasUnderScores) {
-    labelText = field.replace(/_/g, ' ').trim();
+    labelText = ucwords(field.replace(/_/g, ' ').trim());
     return fieldValidation.required(`${labelText} is required`);
   }
 
-  return fieldValidation.required().label(field);
+  return fieldValidation.required().label(ucwords(field));
 };
 
 const processTestConstraint = (fieldValidation: any, testObject: any) =>
