@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import { api } from '~/composables/api';
+import Api from '~/utils/api';
+import type { ApiResponse } from '~/models/apiResponse';
 import type { Auth } from '~/models/authModel';
 import type { Login } from '~/models/login';
 import type { User } from '~/models/user';
@@ -13,11 +14,15 @@ export const useUserStore = defineStore('user', () => {
   const setAuthUser = (data?: {}) => (user.value = data);
   const setToken = (data?: string) => (bearerToken.value = data);
 
-  const signIn = async (data: Login) => {
+  const signIn = async (payload: Login) => {
     try {
-      const response = await api.post<Auth>('auth/login', JSON.stringify(data));
-
-      setToken(response.access_token.value);
+      await Api.post('auth/login', JSON.stringify(payload)).then(
+        async ({ data }) => {
+          const responseData = data.value as unknown as ApiResponse;
+          const auth = responseData.data as unknown as Auth;
+          setToken(auth?.access_token.value);
+        }
+      );
 
       await fetchAuthUser();
     } catch (error) {
@@ -30,7 +35,7 @@ export const useUserStore = defineStore('user', () => {
   const fetchAuthUser = async () => {
     if (bearerToken.value) {
       try {
-        const response = await api.get<User>('auth/user');
+        const response = await api.get('auth/user');
 
         setAuthUser(response);
       } catch (error) {
