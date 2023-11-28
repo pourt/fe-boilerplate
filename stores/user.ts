@@ -35,7 +35,7 @@ export const useUserStore = defineStore('user', () => {
   const fetchAuthUser = async () => {
     if (bearerToken.value) {
       try {
-        const response = await api.get('auth/user');
+        const response = await Api.get('auth/user');
 
         setAuthUser(response);
       } catch (error) {

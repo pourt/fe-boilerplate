@@ -23,7 +23,7 @@ class Api {
       method: 'GET',
     };
 
-    return (await useFetch(enpoint, options)).value as unknown as ApiResponse;
+    return (await useFetch(enpoint, options)) as unknown as ApiResponse;
   }
 
   public static async post(enpoint: string, data = {}): Promise<ApiResponse> {
