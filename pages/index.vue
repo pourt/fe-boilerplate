@@ -17,7 +17,7 @@
         class="space-y-6"
         :initial-values="formData"
         :validation-schema="formSchema"
-        v-slot="{ handleSubmit, validate, values }">
+        @submit="handleSignIn">
         <div>
           <div class="mt-2">
             <FormField
@@ -27,8 +27,7 @@
               name="email"
               type="email"
               autocomplete="email"
-              required
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              required />
           </div>
         </div>
 
@@ -42,28 +41,27 @@
               name="password"
               autocomplete="current-password"
               required
-              formControlClass="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              <div class="flex items-center justify-between">
-                <div class="text-sm">
-                  <a
-                    href="#"
-                    class="font-semibold text-indigo-600 hover:text-indigo-500"
-                    >Forgot password?</a
-                  >
-                </div>
-              </div>
+              labelClass="block text-sm font-medium leading-6 text-gray-900">
             </FormField>
           </div>
         </div>
 
         <div>
           <button
-            @click="validate"
             ref="btnSignIn"
             type="submit"
-            formControlClass="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
             Sign in
           </button>
+        </div>
+        <div class="flex items-center justify-end">
+          <div class="text-sm">
+            <a
+              href="#"
+              class="font-semibold text-indigo-600 hover:text-indigo-500"
+              >Forgot password?</a
+            >
+          </div>
         </div>
       </Form>
     </div>
@@ -103,16 +101,14 @@ export default defineComponent({
   },
 
   methods: {
-    async handleSignIn(values) {
-      this.formData = values;
-
+    async handleSignIn(values: any) {
       console.log('values', values);
-      console.log('formData', this.formData);
+      this.formData = values;
 
       await this.userStore
         .signIn(this.formData)
-        .then(() => {
-          this.$router.replace('/dashboard');
+        .then((res) => {
+          console.log('res', res);
         })
         .catch((error) => {
           console.log('handleSignIn', error);
